@@ -1,0 +1,326 @@
+defaults: &defaults
+  docker:
+    - image: gcr.io/planet-4-151612/p4-builder:latest
+  working_directory:  /home/circleci/
+
+version: 2
+
+jobs:
+  build-develop:
+    <<: *defaults
+    environment:
+      APP_ENVIRONMENT: development
+      APP_HOSTNAME: k8s.p4.greenpeace.org
+      APP_HOSTPATH: brasil
+      CLOUDSQL_INSTANCE: p4-develop-k8s
+      CONTAINER_PREFIX: planet4-brasil
+      GOOGLE_PROJECT_ID: planet-4-151612
+      HELM_NAMESPACE: develop
+      TYPE: "Container Build - planet4-brasil-x"
+      WP_DB_NAME: planet4-brasil_wordpress_develop
+      WP_STATELESS_BUCKET: planet4-brasil-stateless-develop
+      WP_TITLE: Greenpeace Brasil Development
+    steps:
+      - setup_remote_docker
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+            mkdir -p /tmp/workspace/var
+            echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
+
+      - run:
+          name: Build
+          working_directory: /home/circleci
+          command: |
+            if make
+            then
+              ${HOME}/scripts/notify-job-success.sh
+            else
+              ${HOME}/scripts/notify-job-failure.sh
+              exit 1
+            fi
+
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - var
+
+  # test:
+  #   <<: *defaults
+  #   steps:
+  #     - run:
+  #         name: Placeholder
+  #         command: |
+  #           echo "Branch: ${CIRCLE_BRANCH}"
+  #           echo "Build:  ${CIRCLE_BUILD_NUM}"
+  #           echo "Tag:    ${CIRCLE_TAG}"
+  #           echo "No tests implemented yet"
+
+  deploy-develop:
+    <<: *defaults
+    environment:
+      APP_ENVIRONMENT: development
+      APP_HOSTNAME: k8s.p4.greenpeace.org
+      APP_HOSTPATH: brasil
+      CLOUDSQL_INSTANCE: p4-develop-k8s
+      CONTAINER_PREFIX: planet4-brasil
+      GOOGLE_PROJECT_ID: planet-4-151612
+      HELM_NAMESPACE: develop
+      WP_DB_NAME: planet4-brasil_wordpress_develop
+      WP_STATELESS_BUCKET: planet4-brasil-stateless-develop
+      WP_TITLE: Greenpeace Brasil Development
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+
+      - run:
+          name: Deploy new containers
+          environment:
+            NEWRELIC_APPNAME: P4 Brasil Development
+          command: |
+            BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy
+
+  build-release:
+    <<: *defaults
+    environment:
+      APP_ENVIRONMENT: staging
+      APP_HOSTNAME: release.k8s.p4.greenpeace.org
+      APP_HOSTPATH: brasil
+      CLOUDSQL_INSTANCE: planet4-prod
+      CONTAINER_PREFIX: planet4-brasil
+      GCLOUD_CLUSTER: planet4-production
+      GOOGLE_PROJECT_ID: planet4-production
+      HELM_NAMESPACE: brasil
+      HELM_RELEASE: planet4-brasil-release
+      TYPE: "Container Build - planet4-brasil-x"
+      WP_DB_NAME: planet4-brasil_wordpress_release
+      WP_STATELESS_BUCKET: planet4-brasil-stateless-release
+      WP_TITLE: Greenpeace Brasil Release Candidate
+    steps:
+      - setup_remote_docker
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+            mkdir -p /tmp/workspace/var
+            echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
+
+      - run:
+          name: Build
+          working_directory: /home/circleci
+          command: |
+            if make
+            then
+              ${HOME}/scripts/notify-job-success.sh
+            else
+              ${HOME}/scripts/notify-job-failure.sh
+              exit 1
+            fi
+
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - var
+
+  # test-release:
+  #   <<: *defaults
+  #   steps:
+  #     - run:
+  #         name: Placeholder
+  #         command: |
+  #           echo "Branch: ${CIRCLE_BRANCH}"
+  #           echo "Build:  ${CIRCLE_BUILD_NUM}"
+  #           echo "Tag:    ${CIRCLE_TAG}"
+  #           echo "No tests implemented yet"
+
+  deploy-release:
+    <<: *defaults
+    environment:
+      APP_ENVIRONMENT: staging
+      APP_HOSTNAME: release.k8s.p4.greenpeace.org
+      APP_HOSTPATH: brasil
+      CLOUDSQL_INSTANCE: planet4-prod
+      CONTAINER_PREFIX: planet4-brasil
+      GCLOUD_CLUSTER: planet4-production
+      GOOGLE_PROJECT_ID: planet4-production
+      HELM_NAMESPACE: brasil
+      HELM_RELEASE: planet4-brasil-release
+      WP_DB_NAME: planet4-brasil_wordpress_release
+      WP_STATELESS_BUCKET: planet4-brasil-stateless-release
+      WP_TITLE: Greenpeace Brasil Release Candidate
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+
+      - run:
+          name: Deploy new containers
+          environment:
+            NEWRELIC_APPNAME: P4 Brasil Release
+          command: |
+            BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy
+
+  build-tag:
+    <<: *defaults
+    environment:
+      APP_HOSTNAME: master.k8s.p4.greenpeace.org
+      APP_HOSTPATH: brasil
+      CLOUDSQL_INSTANCE: planet4-prod
+      CONTAINER_PREFIX: planet4-brasil
+      GCLOUD_CLUSTER: planet4-production
+      GOOGLE_PROJECT_ID: planet4-production
+      HELM_NAMESPACE: brasil
+      HELM_RELEASE: planet4-brasil-master
+      TYPE: "Tagged Container Build - planet4-brasil-x"
+      WP_DB_NAME: planet4-brasil_wordpress_master
+      WP_STATELESS_BUCKET: planet4-brasil-stateless
+      WP_TITLE: Greenpeace Brasil
+    steps:
+      - setup_remote_docker
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+            mkdir -p /tmp/workspace/var
+            echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
+
+      - run:
+          name: Build
+          working_directory: /home/circleci
+          command: |
+            if make
+            then
+              ${HOME}/scripts/notify-job-success.sh
+            else
+              ${HOME}/scripts/notify-job-failure.sh
+              exit 1
+            fi
+
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - var
+
+  # test-tag:
+  #   <<: *defaults
+  #   steps:
+  #     - run:
+  #         name: Placeholder
+  #         command: |
+  #           echo "Branch: ${CIRCLE_BRANCH}"
+  #           echo "Build:  ${CIRCLE_BUILD_NUM}"
+  #           echo "Tag:    ${CIRCLE_TAG}"
+  #           echo "No tests implemented yet"
+
+  deploy-tag:
+    <<: *defaults
+    environment:
+      APP_HOSTNAME: master.k8s.p4.greenpeace.org
+      APP_HOSTPATH: brasil
+      CLOUDSQL_INSTANCE: planet4-prod
+      CONTAINER_PREFIX: planet4-brasil
+      GCLOUD_CLUSTER: planet4-production
+      GOOGLE_PROJECT_ID: planet4-production
+      HELM_NAMESPACE: brasil
+      HELM_RELEASE: planet4-brasil-master
+      WP_DB_NAME: planet4-brasil_wordpress_master
+      WP_STATELESS_BUCKET: planet4-brasil-stateless
+      WP_TITLE: Greenpeace Brasil
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+
+      - run:
+          name: Deploy new containers
+          environment:
+            NEWRELIC_APPNAME: P4 Brasil Production
+          command: |
+            make deploy
+
+workflows:
+  version: 2
+  develop:
+    jobs:
+    - build-develop:
+        context: org-global
+        filters:
+          branches:
+            only: develop
+          tags:
+            ignore: /^v.*/
+
+    - deploy-develop:
+        context: org-global
+        requires:
+          - build-develop
+        filters:
+          branches:
+            only: develop
+
+  release:
+    jobs:
+    - build-release:
+        context: org-global
+        filters:
+          branches:
+            only: /^release.*/
+          tags:
+            ignore: /^v.*/
+
+    - deploy-release:
+        context: org-global
+        requires:
+          - build-release
+        filters:
+          branches:
+            only: /^release.*/
+          tags:
+            ignore: /^v.*/
+
+  tag:
+    jobs:
+      - build-tag:
+          context: org-global
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - hold-tag:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+          requires:
+            - build-tag
+
+      - deploy-tag:
+          context: org-global
+          requires:
+            - hold-tag
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
