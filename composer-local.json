@@ -1,9 +1,9 @@
 {
 	"name": "planet4-brasil/planet4-brasil",
-	"version": "0.0.3",
+	"version": "0.0.7",
 
 	"require": {
-      "greenpeace/planet4-plugin-migrated-urls": "0.0.1"
+      "greenpeace/planet4-plugin-migrated-urls": "0.0.2"
 	},
 
 	"scripts": {
