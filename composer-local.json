@@ -3,7 +3,7 @@
 	"version": "0.0.3",
 
 	"require": {
-      "greenpeace/planet4-plugin-migrated-urls": "0.0.1"
+      "greenpeace/planet4-plugin-migrated-urls": "0.0.2"
 	},
 
 	"scripts": {
