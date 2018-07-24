@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Notify failure
           when: on_fail
-          command: TYPE="Tests" notify-job-failure.sh
+          command: notify-job-failure.sh
 
       - persist_to_workspace:
           root: /tmp/workspace
@@ -82,7 +82,7 @@ jobs:
       - run:
           name: Notify failure
           when: on_fail
-          command: TYPE="Tests" notify-job-failure.sh
+          command: TYPE="Deploy" notify-job-failure.sh
 
   build-release:
     <<: *defaults
@@ -115,7 +115,7 @@ jobs:
       - run:
           name: Notify failure
           when: on_fail
-          command: TYPE="Tests" notify-job-failure.sh
+          command: notify-job-failure.sh
 
       - persist_to_workspace:
           root: /tmp/workspace
@@ -164,7 +164,7 @@ jobs:
       - run:
           name: Notify failure
           when: on_fail
-          command: TYPE="Tests" notify-job-failure.sh
+          command: TYPE="Deploy" notify-job-failure.sh
 
   build-tag:
     <<: *defaults
@@ -196,7 +196,7 @@ jobs:
       - run:
           name: Notify failure
           when: on_fail
-          command: TYPE="Tests" notify-job-failure.sh
+          command: notify-job-failure.sh
 
       - persist_to_workspace:
           root: /tmp/workspace
@@ -243,7 +243,7 @@ jobs:
       - run:
           name: Notify failure
           when: on_fail
-          command: TYPE="Tests" notify-job-failure.sh
+          command: TYPE="Deploy" notify-job-failure.sh
 
 workflows:
   version: 2
