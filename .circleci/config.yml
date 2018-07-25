@@ -30,17 +30,12 @@ jobs:
             mkdir -p /tmp/workspace/var
             echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
 
+      - run: make
+
       - run:
-          name: Build
-          working_directory: /home/circleci
-          command: |
-            if make
-            then
-              ${HOME}/scripts/notify-job-success.sh
-            else
-              ${HOME}/scripts/notify-job-failure.sh
-              exit 1
-            fi
+          name: Notify failure
+          when: on_fail
+          command: notify-job-failure.sh
 
       - persist_to_workspace:
           root: /tmp/workspace
@@ -75,10 +70,7 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
 
-      - run:
-          name: Configure
-          command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: ${HOME}/scripts/activate-gcloud-account.sh
 
       - run:
           name: Deploy new containers
@@ -86,6 +78,11 @@ jobs:
             NEWRELIC_APPNAME: P4 Brasil Development
           command: |
             BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy
+
+      - run:
+          name: Notify failure
+          when: on_fail
+          command: TYPE="Deploy" notify-job-failure.sh
 
   build-release:
     <<: *defaults
@@ -113,17 +110,12 @@ jobs:
             mkdir -p /tmp/workspace/var
             echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
 
+      - run: make
+
       - run:
-          name: Build
-          working_directory: /home/circleci
-          command: |
-            if make
-            then
-              ${HOME}/scripts/notify-job-success.sh
-            else
-              ${HOME}/scripts/notify-job-failure.sh
-              exit 1
-            fi
+          name: Notify failure
+          when: on_fail
+          command: notify-job-failure.sh
 
       - persist_to_workspace:
           root: /tmp/workspace
@@ -160,10 +152,7 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
 
-      - run:
-          name: Configure
-          command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: ${HOME}/scripts/activate-gcloud-account.sh
 
       - run:
           name: Deploy new containers
@@ -172,10 +161,15 @@ jobs:
           command: |
             BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy
 
+      - run:
+          name: Notify failure
+          when: on_fail
+          command: TYPE="Deploy" notify-job-failure.sh
+
   build-tag:
     <<: *defaults
     environment:
-      APP_HOSTNAME: master.k8s.p4.greenpeace.org
+      APP_HOSTNAME: www.greenpeace.org
       APP_HOSTPATH: brasil
       CLOUDSQL_INSTANCE: planet4-prod
       CONTAINER_PREFIX: planet4-brasil
@@ -197,17 +191,12 @@ jobs:
             mkdir -p /tmp/workspace/var
             echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
 
+      - run: make
+
       - run:
-          name: Build
-          working_directory: /home/circleci
-          command: |
-            if make
-            then
-              ${HOME}/scripts/notify-job-success.sh
-            else
-              ${HOME}/scripts/notify-job-failure.sh
-              exit 1
-            fi
+          name: Notify failure
+          when: on_fail
+          command: notify-job-failure.sh
 
       - persist_to_workspace:
           root: /tmp/workspace
@@ -228,7 +217,7 @@ jobs:
   deploy-tag:
     <<: *defaults
     environment:
-      APP_HOSTNAME: master.k8s.p4.greenpeace.org
+      APP_HOSTNAME: www.greenpeace.org
       APP_HOSTPATH: brasil
       CLOUDSQL_INSTANCE: planet4-prod
       CONTAINER_PREFIX: planet4-brasil
@@ -243,17 +232,18 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
 
-      - run:
-          name: Configure
-          command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: ${HOME}/scripts/activate-gcloud-account.sh
 
       - run:
           name: Deploy new containers
           environment:
             NEWRELIC_APPNAME: P4 Brasil Production
-          command: |
-            make deploy
+          command: make deploy
+
+      - run:
+          name: Notify failure
+          when: on_fail
+          command: TYPE="Deploy" notify-job-failure.sh
 
 workflows:
   version: 2
