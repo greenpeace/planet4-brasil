@@ -225,6 +225,7 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: brasil
       HELM_RELEASE: planet4-brasil-master
+      MIN_REPLICA_COUNT: 2
       WP_DB_NAME: planet4-brasil_wordpress_master
       WP_STATELESS_BUCKET: planet4-brasil-stateless
       WP_TITLE: Greenpeace Brasil
