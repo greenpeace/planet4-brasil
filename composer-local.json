@@ -1,18 +1,14 @@
 {
 	"name": "planet4-brasil/planet4-brasil",
-	"version": "1.0.0",
+	"version": "1.0.1",
 
 	"require": {
-      "greenpeace/planet4-plugin-migrated-urls": "0.0.1"
+      "greenpeace/planet4-child-theme-brasil": "0.*"
 	},
 
 	"scripts": {
-		"download:plugin-wpimport": "curl -o wp-all-import-pro_4.5.4.zip https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/wp-all-import-pro_4.5.4.zip",
-		"install:plugin-wpimport": "wp plugin install wp-all-import-pro_4.5.4.zip --activate",
 		"core:language": "wp language core install pt_BR; wp language core activate pt_BR",
 		"site:custom" : [
-			"@download:plugin-wpimport",
-			"@install:plugin-wpimport",
 			"@core:language"
 		]
 	}
