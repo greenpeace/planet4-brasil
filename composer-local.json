@@ -1,6 +1,6 @@
 {
 	"name": "planet4-brasil/planet4-brasil",
-	"version": "1.0.1",
+	"version": "1.25.0",
 
 	"require": {
       "greenpeace/planet4-child-theme-brasil": "0.*"
