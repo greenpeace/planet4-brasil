@@ -1,6 +1,7 @@
 {
 	"name": "planet4-brasil/planet4-brasil",
-
+	"description": "Greenpeace P4 Brasil",
+	"license": "MIT",
 	"require": {
       "greenpeace/planet4-child-theme-brasil": "0.*"
 	},
