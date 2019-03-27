@@ -79,18 +79,11 @@ job_definitions:
     working_directory: /tmp/workspace/src
     steps:
       - checkout
-      - attach_workspace:
-          at: /tmp/workspace
       - run: release-prepare-nro.sh
       - run:
           name: Notify failure
           when: on_fail
           command: TYPE="Prepare" notify-job-failure.sh
-      - persist_to_workspace:
-          root: /tmp/workspace
-          paths:
-            - var
-            - src
 
   notify_promote: &notify_promote
     working_directory: ~/project
