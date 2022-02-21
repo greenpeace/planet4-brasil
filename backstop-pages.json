@@ -1,12 +1,6 @@
 {
   "scenarios": [
     {
-      "label": "Planet4 Brasil act page",
-      "url": "https://APP_HOSTNAME/APP_HOSTPATH/participe/",
-      "delay": 3000,
-      "misMatchThreshold": 1.5
-    },
-    {
       "label": "Planet4 Brasil explore page",
       "url": "https://APP_HOSTNAME/APP_HOSTPATH/explore/",
       "delay": 3000,
