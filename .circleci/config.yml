@@ -380,68 +380,6 @@ jobs:
       <<: *production_environment
     <<: *rollback_steps
 
-  create-sync-sql:
-    <<: *defaults
-    environment:
-      <<: *common_environment
-      <<: *production_environment
-    working_directory: /tmp/workspace/src
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Configure
-          command: |
-            activate-gcloud-account.sh
-      - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: sql_create_sync_file.sh
-
-  sync-to-staging:
-    <<: *defaults
-    environment:
-      <<: *common_environment
-      <<: *release_environment
-    working_directory: /tmp/workspace/src
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Configure
-          command: |
-            activate-gcloud-account.sh
-      - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: sql_to_sync_site.sh release
-
-  sync-to-develop:
-    <<: *defaults
-    environment:
-      <<: *common_environment
-      <<: *develop_environment
-    working_directory: /tmp/workspace/src
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Configure
-          command: |
-            activate-gcloud-account.sh
-      - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: sql_to_sync_site.sh develop
-
-  notify-sync:
-    <<: *defaults
-    environment:
-      <<: *common_environment
-      <<: *production_environment
-    working_directory: /tmp/workspace/src
-    steps:
-      - checkout
-      - run: activate-gcloud-account.sh
-      - run: notify-sync-admins.sh
-
   backup:
     docker:
       - image: greenpeaceinternational/planet4-backup:latest
@@ -547,38 +485,6 @@ workflows:
           <<: *on_release_tag
           requires:
             - hold-production
-
-  sync-from-production:
-    triggers:
-      - schedule:
-          cron: "10 01 1 * *"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - create-sync-sql:
-          context: org-global
-      - sync-to-staging:
-          context: org-global
-          requires:
-            - create-sync-sql
-      - sync-to-develop:
-          context: org-global
-          requires:
-            - create-sync-sql
-
-  notify-sync:
-    triggers:
-      - schedule:
-          cron: "10 02 28 * *"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - notify-sync:
-          context: org-global
 
   backup:
     triggers:
