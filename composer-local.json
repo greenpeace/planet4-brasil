@@ -6,8 +6,7 @@
     "greenpeace/planet4-child-theme-brasil": "dev-main",
     "plugins/gravityforms": "*",
     "plugins/gravityformsquiz": "*",
-    "plugins/gravityformshubspot": "*",
-    "wpackagist-plugin/wp-all-export": "1.3.3"
+    "plugins/gravityformshubspot": "*"
   },
   "scripts": {
     "core:language": "wp language core install pt_BR; wp language core activate pt_BR",
