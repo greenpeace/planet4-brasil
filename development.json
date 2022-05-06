@@ -1,5 +1,5 @@
 {
   "require": {
-        "wpackagist-plugin/notification": "8.0.10"
+        "wpackagist-plugin/notification": "7.2.4"
   }
 }
