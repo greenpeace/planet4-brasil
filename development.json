@@ -1,5 +1,0 @@
-{
-  "require": {
-    "greenpeace/planet4-plugin-gutenberg-blocks": "dev-fix-read-more-text-from-covers-block"
-  }
-}
