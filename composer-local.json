@@ -3,7 +3,7 @@
   "description": "Greenpeace P4 Brasil",
   "license": "MIT",
   "require": {
-    "greenpeace/planet4-child-theme-brasil": "dev-fix-read-more-text-from-covers-block",
+    "greenpeace/planet4-child-theme-brasil": "dev-main",
     "plugins/gravityforms": "*",
     "plugins/gravityformsquiz": "*",
     "plugins/gravityformshubspot": "*",
