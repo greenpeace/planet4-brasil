@@ -9,10 +9,8 @@
   },
   "scripts": {
     "core:language": "wp language core install pt_BR; wp language core activate pt_BR",
-    "core:gf-language": "mkdir -p public/wp-content/languages/gravityforms/; rsync -ar extra/gravityforms-pt_BR/ public/wp-content/languages/gravityforms/",
     "site:custom" : [
-      "@core:language",
-      "@core:gf-language"
+      "@core:language"
     ]
   }
 }
