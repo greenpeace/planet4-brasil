@@ -5,8 +5,7 @@
   "require": {
     "greenpeace/planet4-child-theme-brasil": "dev-main",
     "plugins/gravityformshubspot": "*",
-    "plugins/gravityformsgoogleanalytics": "*",
-    "wpackagist-plugin/notification": "7.2.4"
+    "plugins/gravityformsgoogleanalytics": "*"
   },
   "scripts": {
     "core:language": "wp language core install pt_BR; wp language core activate pt_BR",
