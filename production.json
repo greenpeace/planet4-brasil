@@ -1,6 +1,7 @@
 {
   "require": {
     "greenpeace/planet4-child-theme-brasil": "0.*",
-    "wpackagist-plugin/wp-stateless":"3.2.2"
+    "wpackagist-plugin/wp-stateless":"3.2.2",
+    "plugins/gravityformsakismet": "*"
   }
 }
