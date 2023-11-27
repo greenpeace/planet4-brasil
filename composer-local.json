@@ -8,8 +8,10 @@
   },
   "scripts": {
     "core:language": "wp language core install pt_BR; wp language core activate pt_BR",
+    "install:plugin-gravityperks": "wp plugin install https://storage.googleapis.com/gpbr-public/gravityperks-2.3.4.zip",
     "site:custom" : [
-      "@core:language"
+      "@core:language",
+      "@install:plugin-gravityperks"
     ]
   }
 }
