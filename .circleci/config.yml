@@ -16,7 +16,7 @@ docker_auth: &docker_auth
 
 defaults: &defaults
   docker:
-    - image: greenpeaceinternational/p4-builder:php7.4
+    - image: greenpeaceinternational/p4-builder:latest
       auth:
         <<: *docker_auth
 
@@ -37,7 +37,6 @@ job_environments:
     HELM_RELEASE: planet4-brasil
     WP_DB_NAME: planet4-brasil_wordpress_develop
     WP_STATELESS_BUCKET: planet4-brasil-stateless-develop
-    PARENT_VERSION: php7.4
   release_build_env: &release_build_env
     GOOGLE_PROJECT_ID: planet4-production
   release_environment: &release_environment
