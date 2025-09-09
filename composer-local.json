@@ -10,10 +10,12 @@
     "core:language": "wp language core install pt_BR; wp language core activate pt_BR",
     "install:plugin-gravityperks": "wp plugin install https://storage.googleapis.com/gpbr-public/gravityperks-2.3.4.zip",
     "install:plugin-gravityperks-date-time-calculator": "wp plugin install https://storage.googleapis.com/gpbr-public/gp-date-time-calculator-1.0-beta-4.16.zip",
+    "install:plugin-gravityformsturnstile": "wp plugin install --activate https://storage.googleapis.com/planet4-3rdparty-plugins/gravityformsturnstile_1.4.0.zip",
     "site:custom" : [
       "@core:language",
       "@install:plugin-gravityperks",
-      "@install:plugin-gravityperks-date-time-calculator"
+      "@install:plugin-gravityperks-date-time-calculator",
+      "@install:plugin-gravityformsturnstile"
     ]
   }
 }
