@@ -4,7 +4,8 @@
   "license": "MIT",
   "require": {
     "greenpeace/planet4-child-theme-brasil": "dev-main",
-    "plugins/gravityformsakismet": "*"
+    "plugins/gravityformsakismet": "*",
+ 		"greenpeace/planet4-gpch-plugin-optimize": "*"
   },
   "scripts": {
     "core:language": "wp language core install pt_BR; wp language core activate pt_BR",
